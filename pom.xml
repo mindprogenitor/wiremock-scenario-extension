@@ -4,17 +4,15 @@
 	<groupId>com.mindprogeny.wiremock.extension</groupId>
 	<artifactId>wiremock-scenario-extension</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	
+	<parent>
+		<groupId>com.mindprogeny.common</groupId>
+		<artifactId>common-oss</artifactId>
+		<version>0.0.1</version>
+	</parent>
 
-	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Wiremock Extension to use dynamic stubs using freemarker templates</description>
 	<url>https://github.com/mindprogenitor/wiremock-scenario-extension</url>
-
-	<licenses>
-		<license>
-			<name>GNU GENERAL PUBLIC LICENSE, Version 3</name>
-			<url>https://www.gnu.org/licenses/gpl.txt</url>
-		</license>
-	</licenses>
 
 	<scm>
 		<connection>scm:git:git@github.com:mindprogenitor/wiremock-scenario-extension.git</connection>
@@ -23,38 +21,12 @@
 		<tag>HEAD</tag>
 	</scm>
 
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
-
-	<developers>
-		<developer>
-			<name>Joao Viegas</name>
-			<email>joao.viegas@mindprogeny.com</email>
-			<organization>Mind Progeny</organization>
-			<organizationUrl>http://www.mindprogeny.com</organizationUrl>
-		</developer>
-	</developers>
-
 	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
 		<wiremock.version>2.14.0</wiremock.version>
 		<jackson.version>2.8.9</jackson.version>
 		
+		<simple-http.version>0.0.1-SNAPSHOT</simple-http.version>
 		<jayway.version>2.4.1</jayway.version>
-		<mockito.version>1.10.19</mockito.version>
-		<junit.version>4.12</junit.version>
 	</properties>
 
 	<dependencies>
@@ -74,13 +46,16 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
-			<version>${mockito.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.mindprogeny.util</groupId>
+			<artifactId>simple-http</artifactId>
+			<version>${simple-http.version}</version>
 			<scope>test</scope>
 		</dependency>
 

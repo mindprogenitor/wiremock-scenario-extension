@@ -1,0 +1,7 @@
+{
+	"response": {
+        "status": 200,
+        "body": "DEFAULT",
+        "headers": { "Content-Type": "text/text" }
+    }
+}
