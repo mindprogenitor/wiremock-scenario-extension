@@ -102,4 +102,25 @@ public class ConcurrentScenarioExtensionTest {
 	       .then().body(equalTo("MATCHED"));
 
 	}
+
+	@Test
+	public void testUrlPathRegexMatchingRules() throws Exception {
+		loadStub("/stub/match-urlpathregex-stub.json");
+		given().port(55080)
+		   .when().get("/test")
+		   .then().body(equalTo("MATCHED"));
+
+		given().port(55080)
+	       .when().get("/testUrl")
+	       .then().body(equalTo("MATCHED"));
+
+		given().port(55080)
+	       .when().get("/testUrl?with=something")
+	       .then().body(equalTo("MATCHED"));
+
+		given().port(55080)
+	       .when().get("/tes?with=something")
+	       .then().body(equalTo("DEFAULT"));
+
+	}
 }
