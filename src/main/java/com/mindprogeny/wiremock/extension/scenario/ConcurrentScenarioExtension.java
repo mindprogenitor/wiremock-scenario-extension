@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.github.tomakehurst.wiremock.extension.Parameters;
 import com.github.tomakehurst.wiremock.http.Request;
+import com.github.tomakehurst.wiremock.http.RequestMethod;
 import com.github.tomakehurst.wiremock.matching.MatchResult;
 import com.github.tomakehurst.wiremock.matching.RequestMatcherExtension;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
@@ -37,7 +38,7 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
               , (String)requestParameters.get("urlPattern")
               , (String)requestParameters.get("urlPath")
               , (String)requestParameters.get("urlPathPattern")
-              , null
+              , RequestMethod.fromString((String)requestParameters.get("method"))
               , null
               , null
               , null

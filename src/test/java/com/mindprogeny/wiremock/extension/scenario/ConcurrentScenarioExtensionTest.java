@@ -123,4 +123,16 @@ public class ConcurrentScenarioExtensionTest {
 	       .then().body(equalTo("DEFAULT"));
 
 	}
+
+	@Test
+	public void testMethodMatchingRules() throws Exception {
+		loadStub("/stub/match-urlpathregex-stub.json");
+		given().port(55080)
+		   .when().get("/test")
+		   .then().body(equalTo("MATCHED"));
+
+		given().port(55080)
+	       .when().post("/test")
+	       .then().body(equalTo("DEFAULT"));
+	}
 }
