@@ -135,4 +135,22 @@ public class ConcurrentScenarioExtensionTest {
 	       .when().post("/test")
 	       .then().body(equalTo("DEFAULT"));
 	}
+
+	@Test
+	public void testBasicAuthenticationMatchingRules() throws Exception {
+		loadStub("/stub/match-basic-credentials-stub.json");
+		given().port(55080)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+
+		given().port(55080)
+	       .auth().preemptive().basic("user", "otherpassword")
+	       .when().post("/test")
+	       .then().body(equalTo("DEFAULT"));
+
+		given().port(55080)
+	       .auth().preemptive().basic("user", "password")
+	       .when().post("/test")
+	       .then().body(equalTo("MATCHED"));
+	}
 }

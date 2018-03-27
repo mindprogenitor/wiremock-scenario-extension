@@ -9,6 +9,7 @@ package com.mindprogeny.wiremock.extension.scenario;
 
 import java.util.Map;
 
+import com.github.tomakehurst.wiremock.client.BasicCredentials;
 import com.github.tomakehurst.wiremock.extension.Parameters;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.http.RequestMethod;
@@ -32,7 +33,14 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
 		// First check if the stub itself is matched by the request pattern
 		
 		Map<String,Object> requestParameters = (Map<String, Object>) parameters.get("request");
-        
+
+        BasicCredentials basicCredentials = null;
+        Map<String,String> basicCredentialsMap = (Map<String, String>) requestParameters.get("basicAuthCredentials");
+        if (basicCredentialsMap != null) {
+            basicCredentials = new BasicCredentials(basicCredentialsMap.get("username"), 
+                                                    basicCredentialsMap.get("password"));
+        }
+
         MatchResult matchResult = new RequestPattern( 
         		(String)requestParameters.get("url")
               , (String)requestParameters.get("urlPattern")
@@ -42,7 +50,7 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
               , null
               , null
               , null
-              , null
+              , basicCredentials
               , null
               , null
               , null).match(request);
