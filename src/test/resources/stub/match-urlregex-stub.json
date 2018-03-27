@@ -1,0 +1,18 @@
+{
+	"request": {
+		"customMatcher": {
+			"name": "concurrent-session",
+			"parameters": {
+			    "request": {
+			        "method": "GET",
+			        "urlPattern": "/testUrl\\?with=(.*)"
+			    }
+			}
+		}
+	},
+    "response": {
+        "status": 200,
+        "body": "MATCHED",
+        "headers": { "Content-Type": "text/text" }
+    }
+}

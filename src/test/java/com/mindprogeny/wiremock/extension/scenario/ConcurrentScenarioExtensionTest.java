@@ -70,6 +70,23 @@ public class ConcurrentScenarioExtensionTest {
 	}
 
 	@Test
+	public void testUrlRegexMatchingRules() throws Exception {
+		loadStub("/stub/match-urlregex-stub.json");
+		given().port(55080)
+		   .when().get("/testUrl")
+		   .then().body(equalTo("DEFAULT"));
+
+		given().port(55080)
+	       .when().get("/testUrl?with=nothing")
+	       .then().body(equalTo("MATCHED"));
+
+		given().port(55080)
+	       .when().get("/testUrl?with=something&and=somethingelse")
+	       .then().body(equalTo("MATCHED"));
+
+	}
+
+	@Test
 	public void testUrlPathMatchingRules() throws Exception {
 		loadStub("/stub/match-urlpath-stub.json");
 		given().port(55080)
