@@ -7,6 +7,7 @@
 
 package com.mindprogeny.wiremock.extension.scenario;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.github.tomakehurst.wiremock.client.BasicCredentials;
@@ -14,6 +15,7 @@ import com.github.tomakehurst.wiremock.extension.Parameters;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.http.RequestMethod;
 import com.github.tomakehurst.wiremock.matching.MatchResult;
+import com.github.tomakehurst.wiremock.matching.MultiValuePattern;
 import com.github.tomakehurst.wiremock.matching.RequestMatcherExtension;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
 
@@ -47,7 +49,7 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
               , (String)requestParameters.get("urlPath")
               , (String)requestParameters.get("urlPathPattern")
               , RequestMethod.fromString((String)requestParameters.get("method"))
-              , null
+              , getMultiValuePatternMap((Map<String,Map<String,Object>>)requestParameters.get("headers"))
               , null
               , null
               , basicCredentials
@@ -65,4 +67,25 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
     public String getName() {
         return "concurrent-session";
     }
+
+    /**
+     * Transforms a map of named pattern matching rule parameters to a map of named multi value pattern rules.
+     * 
+     * @param namedPatternParameters the map of named pattern matching rule parameters
+     * @return a map of named multi value pattern rules
+     */
+    private Map<String, MultiValuePattern> getMultiValuePatternMap(Map<String,Map<String,Object>> namedPatternParameters) {
+        if (namedPatternParameters == null || namedPatternParameters.size() ==0) {
+            return null;
+        }
+        
+        Map<String, MultiValuePattern> result = new HashMap<>();
+        
+        namedPatternParameters.forEach((k,v) -> {
+            result.put(k, new MultiValuePattern(StringValuePatternBuilder.build(v)));
+        });
+        
+        return result;
+    }
+
 }

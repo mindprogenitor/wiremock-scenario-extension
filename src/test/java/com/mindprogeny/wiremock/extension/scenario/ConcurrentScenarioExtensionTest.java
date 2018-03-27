@@ -153,4 +153,88 @@ public class ConcurrentScenarioExtensionTest {
 	       .when().post("/test")
 	       .then().body(equalTo("MATCHED"));
 	}
+	
+	@Test
+	public void testHeadersMatchingRules() throws Exception {
+		loadStub("/stub/match-headers-stub.json");
+		
+		given().port(55080)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+        given().port(55080)
+		   .with().header("Content-Type", "text/xml")
+		   .and().header("Cache-Control", "private")
+		   .and().header("If-None-Match", "aa09")
+		   .and().header("Accept","text/text")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED"));
+		
+		given().port(55080)
+		   .with().header("Content-Type", "text/text")
+		   .and().header("Cache-Control", "private")
+		   .and().header("If-None-Match", "aa09")
+		   .and().header("Accept","text/text")
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().header("Content-Type", "text/xml")
+		   .and().header("Cache-Control", "private-please")
+		   .and().header("If-None-Match", "aa09")
+		   .and().header("Accept","text/text")
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().header("Content-Type", "text/xml")
+		   .and().header("Cache-Control", "public")
+		   .and().header("If-None-Match", "aa09")
+		   .and().header("Accept","text/text")
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+
+		
+		given().port(55080)
+		   .with().header("Content-Type", "text/xml")
+		   .and().header("Cache-Control", "private")
+		   .and().header("If-None-Match", "aa8sdf8h3ui409")
+		   .and().header("Accept","text/text")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED"));
+		
+		given().port(55080)
+		   .with().header("Content-Type", "text/xml")
+		   .and().header("Cache-Control", "private")
+		   .and().header("If-None-Match", "aA09")
+		   .and().header("Accept","text/text")
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().header("Content-Type", "text/xml")
+		   .and().header("Cache-Control", "private")
+		   .and().header("If-None-Match", "aa09")
+		   .and().header("Accept","text/xml")
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().header("Content-Type", "text/xml")
+		   .and().header("Cache-Control", "private")
+		   .and().header("If-None-Match", "aa09")
+		   .and().header("Accept","text/text")
+		   .and().header("Timestamp","0")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED"));
+		
+		given().port(55080)
+		   .with().header("Content-Type", "text/xml")
+		   .and().header("Cache-Control", "private")
+		   .and().header("If-None-Match", "aa09")
+		   .and().header("Accept","text/text")
+		   .and().header("ETag","0")
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+	}
 }

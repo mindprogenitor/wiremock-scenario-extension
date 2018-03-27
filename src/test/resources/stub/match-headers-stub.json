@@ -1,0 +1,25 @@
+{
+	"request": {
+		"customMatcher": {
+			"name": "concurrent-session",
+			"parameters": {
+			    "request": {
+			        "method": "POST",
+			        "url": "/test",
+					"headers": {
+						"Content-Type":  { "contains": "text/xml" },
+						"Cache-Control": { "equalTo": "private" },
+						"If-None-Match": { "matches": "([a-z0-9]*)" },
+						"Accept":        { "doesNotMatch": "(.*)xml(.*)"},
+						"ETag":          { "absent": true } 
+					}
+			    }
+			}
+		}
+	},
+    "response": {
+        "status": 200,
+        "body": "MATCHED",
+        "headers": { "Content-Type": "text/text" }
+    }
+}
