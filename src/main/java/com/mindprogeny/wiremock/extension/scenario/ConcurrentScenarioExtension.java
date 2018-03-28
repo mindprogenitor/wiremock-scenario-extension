@@ -50,7 +50,7 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
               , (String)requestParameters.get("urlPathPattern")
               , RequestMethod.fromString((String)requestParameters.get("method"))
               , getMultiValuePatternMap((Map<String,Map<String,Object>>)requestParameters.get("headers"))
-              , null
+              , getMultiValuePatternMap((Map<String,Map<String,Object>>)requestParameters.get("queryParameters"))
               , null
               , basicCredentials
               , null

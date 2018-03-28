@@ -237,4 +237,72 @@ public class ConcurrentScenarioExtensionTest {
 		   .when().post("/test")
 		   .then().body(equalTo("DEFAULT"));
 	}
+	
+    @Test
+    public void testQueryParameterMatchingRules() throws Exception{
+		loadStub("/stub/match-query-stub.json");
+		
+		given().port(55080)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().queryParameter("one", 1)
+		   .and().queryParameter("two", 42)
+		   .and().queryParameter("three", 333)
+		   .and().queryParameter("four", 444)
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED"));
+		
+		given().port(55080)
+		   .with().queryParameter("one", 1)
+		   .and().queryParameter("two", 42)
+		   .and().queryParameter("three", 333)
+		   .and().queryParameter("four", 444)
+		   .and().queryParameter("six", 6)
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED"));
+		
+		given().port(55080)
+		   .with().queryParameter("one", 1)
+		   .and().queryParameter("two", 42)
+		   .and().queryParameter("three", 333)
+		   .and().queryParameter("four", 444)
+		   .and().queryParameter("five", 6)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		
+		given().port(55080)
+		   .with().queryParameter("one", 2)
+		   .and().queryParameter("two", 42)
+		   .and().queryParameter("three", 333)
+		   .and().queryParameter("four", 444)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+
+		given().port(55080)
+		   .with().queryParameter("one", 1)
+		   .and().queryParameter("two", 43)
+		   .and().queryParameter("three", 333)
+		   .and().queryParameter("four", 444)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+
+		given().port(55080)
+		   .with().queryParameter("one", 1)
+		   .and().queryParameter("two", 42)
+		   .and().queryParameter("three", 3331)
+		   .and().queryParameter("four", 444)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+
+		given().port(55080)
+		   .with().queryParameter("one", 1)
+		   .and().queryParameter("two", 42)
+		   .and().queryParameter("three", 333)
+		   .and().queryParameter("four", 44)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+    }
 }
