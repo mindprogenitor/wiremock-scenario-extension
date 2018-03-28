@@ -373,4 +373,49 @@ public class ConcurrentScenarioExtensionTest {
 		   .when().post("/test")
 		   .then().body(equalTo("DEFAULT"));
     }
+    
+    @Test
+    public void testSimpleBodyPatternRules() throws Exception{
+		loadStub("/stub/match-body-pattern1-stub.json");
+		loadStub("/stub/match-body-pattern2-stub.json");
+		
+		given().port(55080)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().body("the number is 5678")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED"));
+		
+		given().port(55080)
+		   .with().body("the number is 1234")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED"));
+		
+		given().port(55080)
+		   .with().body("the number is 1234")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED"));
+		
+		given().port(55080)
+		   .with().body("number is 1234")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED"));
+		
+		given().port(55080)
+		   .with().body("number is 5678")
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().body("numbe is 1234")
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().body("number is 123")
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+    }
 }
