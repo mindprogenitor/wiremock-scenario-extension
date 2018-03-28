@@ -418,4 +418,23 @@ public class ConcurrentScenarioExtensionTest {
 		   .when().post("/test")
 		   .then().body(equalTo("DEFAULT"));
     }
+    
+    @Test
+    public void testBinaryBodyPatternRules() throws Exception{
+		loadStub("/stub/match-body-pattern3-stub.json");
+		
+		given().port(55080)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().body(new byte[]{1,2,3})
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED"));
+		
+		given().port(55080)
+		   .with().body(new byte[]{1,2,4})
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+    }
 }

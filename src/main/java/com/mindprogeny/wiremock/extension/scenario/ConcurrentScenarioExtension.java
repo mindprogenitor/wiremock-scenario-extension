@@ -17,6 +17,7 @@ import com.github.tomakehurst.wiremock.client.BasicCredentials;
 import com.github.tomakehurst.wiremock.extension.Parameters;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.http.RequestMethod;
+import com.github.tomakehurst.wiremock.matching.BinaryEqualToPattern;
 import com.github.tomakehurst.wiremock.matching.ContentPattern;
 import com.github.tomakehurst.wiremock.matching.MatchResult;
 import com.github.tomakehurst.wiremock.matching.MultiValuePattern;
@@ -128,7 +129,12 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
         List<ContentPattern<?>> result = new LinkedList<>();
         
         patternParameters.forEach(e -> {
-            result.add(StringValuePatternBuilder.build(e));
+        	Object binaryValue = e.get("binaryEqualTo");
+        	if (binaryValue != null) {
+        		result.add(new BinaryEqualToPattern(binaryValue.toString()));
+        	} else {
+                result.add(StringValuePatternBuilder.build(e));
+        	}
         });
         
         return result;
