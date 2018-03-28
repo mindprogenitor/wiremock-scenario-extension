@@ -1,0 +1,25 @@
+{
+	"request": {
+		"customMatcher": {
+			"name": "concurrent-session",
+			"parameters": {
+			    "request": {
+			        "method": "POST",
+			        "urlPath": "/test",
+					"cookies": {
+						"ONE":   { "equalTo": "1" },
+						"TWO":   { "contains": "2" },
+						"THREE": { "matches": "(3*)" },
+						"FOUR":  { "doesNotMatch": "44"},
+						"FIVE":  { "absent": true } 
+					}
+			    }
+			}
+		}
+	},
+    "response": {
+        "status": 200,
+        "body": "MATCHED",
+        "headers": { "Content-Type": "text/text" }
+    }
+}

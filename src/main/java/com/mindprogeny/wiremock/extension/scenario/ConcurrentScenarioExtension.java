@@ -18,6 +18,7 @@ import com.github.tomakehurst.wiremock.matching.MatchResult;
 import com.github.tomakehurst.wiremock.matching.MultiValuePattern;
 import com.github.tomakehurst.wiremock.matching.RequestMatcherExtension;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
+import com.github.tomakehurst.wiremock.matching.StringValuePattern;
 
 /**
  * @author Jo&atilde;o Viegas (joao.viegas@mindprogeny.com)
@@ -51,7 +52,7 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
               , RequestMethod.fromString((String)requestParameters.get("method"))
               , getMultiValuePatternMap((Map<String,Map<String,Object>>)requestParameters.get("headers"))
               , getMultiValuePatternMap((Map<String,Map<String,Object>>)requestParameters.get("queryParameters"))
-              , null
+              , getStringValuePatternMap((Map<String,Map<String,Object>>)requestParameters.get("cookies"))
               , basicCredentials
               , null
               , null
@@ -83,6 +84,26 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
         
         namedPatternParameters.forEach((k,v) -> {
             result.put(k, new MultiValuePattern(StringValuePatternBuilder.build(v)));
+        });
+        
+        return result;
+    }
+
+    /**
+     * Transforms a map of named pattern matching rule parameters to a map of named string value pattern rules.
+     * 
+     * @param namedPatternParameters the map of named pattern matching rule parameters
+     * @return a map of named string value pattern rules
+     */
+    private Map<String, StringValuePattern> getStringValuePatternMap(Map<String,Map<String,Object>> namedPatternParameters) {
+        if (namedPatternParameters == null || namedPatternParameters.size() == 0) {
+            return null;
+        }
+        
+        Map<String, StringValuePattern> result = new HashMap<>();
+        
+        namedPatternParameters.forEach((k,v) -> {
+            result.put(k, StringValuePatternBuilder.build(v));
         });
         
         return result;

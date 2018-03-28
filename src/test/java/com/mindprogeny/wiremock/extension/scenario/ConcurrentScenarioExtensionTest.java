@@ -305,4 +305,72 @@ public class ConcurrentScenarioExtensionTest {
 		   .when().post("/test")
 		   .then().body(equalTo("DEFAULT"));
     }
+	
+    @Test
+    public void testCookieMatchingRules() throws Exception{
+		loadStub("/stub/match-cookies-stub.json");
+		
+		given().port(55080)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().cookie("ONE", 1)
+		   .and().cookie("TWO", 42)
+		   .and().cookie("THREE", 333)
+		   .and().cookie("FOUR", 444)
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED"));
+		
+		given().port(55080)
+		   .with().cookie("ONE", 1)
+		   .and().cookie("TWO", 42)
+		   .and().cookie("THREE", 333)
+		   .and().cookie("FOUR", 444)
+		   .and().cookie("SIX", 6)
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED"));
+		
+		given().port(55080)
+		   .with().cookie("ONE", 1)
+		   .and().cookie("TWO", 42)
+		   .and().cookie("THREE", 333)
+		   .and().cookie("FOUR", 444)
+		   .and().cookie("FIVE", 6)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		
+		given().port(55080)
+		   .with().cookie("ONE", 2)
+		   .and().cookie("TWO", 42)
+		   .and().cookie("THREE", 333)
+		   .and().cookie("FOUR", 444)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+
+		given().port(55080)
+		   .with().cookie("ONE", 1)
+		   .and().cookie("TWO", 43)
+		   .and().cookie("THREE", 333)
+		   .and().cookie("FOUR", 444)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+
+		given().port(55080)
+		   .with().cookie("ONE", 1)
+		   .and().cookie("TWO", 42)
+		   .and().cookie("THREE", 3331)
+		   .and().cookie("FOUR", 444)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+
+		given().port(55080)
+		   .with().cookie("ONE", 1)
+		   .and().cookie("TWO", 42)
+		   .and().cookie("THREE", 333)
+		   .and().cookie("FOUR", 44)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+    }
 }
