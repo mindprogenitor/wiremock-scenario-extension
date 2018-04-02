@@ -6,6 +6,7 @@
  */
 package com.mindprogeny.wiremock.extension.scenario;
 
+import com.github.tomakehurst.wiremock.common.Json;
 import com.github.tomakehurst.wiremock.matching.AnythingPattern;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.github.tomakehurst.wiremock.matching.EqualToJsonPattern;
@@ -62,10 +63,10 @@ public class StringValuePatternBuilder {
     public static StringValuePattern build(Map<String,Object> matchParameters) {
 
         Class<? extends StringValuePattern> patternClass = null;
-        String matchPattern = null;
+        Object matchPattern = null;
         for (String matchMethod : matchParameters.keySet()) {
             if ((patternClass = MATCHERS.get(matchMethod)) != null) {
-                matchPattern = (String) matchParameters.get(matchMethod);
+                matchPattern =  matchParameters.get(matchMethod);
                 break;
             }
         }
@@ -79,13 +80,13 @@ public class StringValuePatternBuilder {
             Boolean ignoreArrayOrder = (Boolean) matchParameters.get("ignoreArrayOrder");
             Boolean ignoreExtraElements = (Boolean) matchParameters.get("ignoreExtraElements");
 
-            return new EqualToJsonPattern(matchPattern, ignoreArrayOrder==null?false:ignoreArrayOrder, ignoreExtraElements==null?false:ignoreExtraElements);
+            return new EqualToJsonPattern(matchPattern instanceof String?(String)matchPattern:Json.write(matchPattern), ignoreArrayOrder==null?false:ignoreArrayOrder, ignoreExtraElements==null?false:ignoreExtraElements);
         } 
  
         if (patternClass.equals(MatchesXPathPattern.class)) {
             Map<String,String> namespaces = (Map<String, String>) matchParameters.get("xPathNamespaces");
 
-            return new MatchesXPathPattern(matchPattern, namespaces==null?Collections.<String, String>emptyMap():namespaces );
+            return new MatchesXPathPattern(matchPattern.toString(), namespaces==null?Collections.<String, String>emptyMap():namespaces );
         }
 
         Constructor<? extends StringValuePattern> constructor;

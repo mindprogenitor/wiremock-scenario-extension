@@ -1,0 +1,22 @@
+{
+	"request": {
+		"customMatcher": {
+			"name": "concurrent-session",
+			"parameters": {
+			    "request": {
+			        "method": "POST",
+			        "urlPath": "/test",
+			        "bodyPatterns": [
+			    					 { "equalToJson": "{ \"first\":1,\"second\":2}",
+			    					   "ignoreExtraElements": true,
+			    					   "ignoreArrayOrder": true } ]
+			    }
+			}
+		}
+	},
+    "response": {
+        "status": 200,
+        "body": "MATCHED-LOOSELY-CONTAINED",
+        "headers": { "Content-Type": "text/text" }
+    }
+}

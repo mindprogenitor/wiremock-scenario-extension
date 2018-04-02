@@ -437,4 +437,98 @@ public class ConcurrentScenarioExtensionTest {
 		   .when().post("/test")
 		   .then().body(equalTo("DEFAULT"));
     }
+    
+    @Test
+    public void testJsonTextBodyPatternRules() throws Exception{
+		loadStub("/stub/match-json-body-pattern8-stub.json");
+		loadStub("/stub/match-json-body-pattern6-stub.json");
+		loadStub("/stub/match-json-body-pattern4-stub.json");
+		loadStub("/stub/match-json-body-pattern2-stub.json");
+		
+		given().port(55080)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().body("something")
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().body("{ \"first\":1,\"second\":2}")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED-EXACTLY"));
+		
+		given().port(55080)
+		   .with().body("{ \"second\":2,\"first\":1}")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED-EXACTLY")); // instead of MATCHED-LOOSELY... the array order is not respected by default
+		
+		given().port(55080)
+		   .with().body("{ \"first\":1,\"second\":2, \"third\":3}")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED-CONTAINED"));
+		
+		given().port(55080)
+		   .with().body("{ \"first\":1, \"third\":3, \"second\":2}")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED-CONTAINED"));
+		
+		given().port(55080)
+		   .with().body("{ \"second\":2,\"first\":1, \"third\":3}")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED-CONTAINED")); //instead of MATCHED-LOOSELY-CONTAINED... the array order is not respected by default
+		
+		given().port(55080)
+		   .with().body("{ \"second\":2, \"third\":3,\"first\":1}")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED-CONTAINED")); //instead of MATCHED-LOOSELY-CONTAINED... the array order is not respected by default
+    }
+    
+    @Test
+    public void testJsonBodyPatternRules() throws Exception{
+		loadStub("/stub/match-json-body-pattern7-stub.json");
+		loadStub("/stub/match-json-body-pattern5-stub.json");
+		loadStub("/stub/match-json-body-pattern3-stub.json");
+		loadStub("/stub/match-json-body-pattern1-stub.json");
+		
+		given().port(55080)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().body("something")
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().body("{ \"first\":1,\"second\":2}")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED-EXACTLY"));
+		
+		given().port(55080)
+		   .with().body("{ \"second\":2,\"first\":1}")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED-EXACTLY")); // instead of MATCHED-LOOSELY... the array order is not respected by default
+		
+		given().port(55080)
+		   .with().body("{ \"first\":1,\"second\":2, \"third\":3}")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED-CONTAINED"));
+		
+		given().port(55080)
+		   .with().body("{ \"first\":1, \"third\":3, \"second\":2}")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED-CONTAINED"));
+		
+		given().port(55080)
+		   .with().body("{ \"second\":2,\"first\":1, \"third\":3}")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED-CONTAINED")); //instead of MATCHED-LOOSELY-CONTAINED... the array order is not respected by default
+		
+		given().port(55080)
+		   .with().body("{ \"second\":2, \"third\":3,\"first\":1}")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED-CONTAINED")); //instead of MATCHED-LOOSELY-CONTAINED... the array order is not respected by default
+    }
 }
