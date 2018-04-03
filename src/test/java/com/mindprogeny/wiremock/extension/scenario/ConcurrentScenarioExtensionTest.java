@@ -602,4 +602,40 @@ public class ConcurrentScenarioExtensionTest {
 		   .when().post("/test")
 		   .then().body(equalTo("MATCHED"));
     }
+    
+    @Test
+    public void testXPathBodyPattern() throws Exception {
+		loadStub("/stub/match-xpath-body-pattern1-stub.json");
+		loadStub("/stub/match-xpath-body-pattern2-stub.json");
+		loadStub("/stub/match-xpath-body-pattern3-stub.json");
+
+		given().port(55080)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().body("something")
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().body("<root></root>")
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().body("<root><parent><name>something</name><child number=\"1\">John</child><child number=\"2\">Mary</child></parent></root>")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED-XPATH"));
+		
+		given().port(55080)
+		   .with().body("<root xmlns:ns5=\"http://www.somewhere.io/XMLRequest\"><ns5:parent><name>something</name><child number=\"1\">John</child><child number=\"2\">Mary</child></ns5:parent></root>")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED-NAMESPACES"));
+		
+		given().port(55080)
+		   .with().body("<root><nest><name>something</name></nest></root>")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED-NESTED"));
+     }
 }

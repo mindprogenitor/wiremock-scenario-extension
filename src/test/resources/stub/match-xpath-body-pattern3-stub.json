@@ -1,0 +1,21 @@
+{
+	"request": {
+		"customMatcher": {
+			"name": "concurrent-session",
+			"parameters": {
+			    "request": {
+			        "method": "POST",
+			        "urlPath": "/test",
+			        "bodyPatterns": [
+			    					 { "matchesXPath" : "/root/nest",
+			    					   "equalToXml": "<name>something</name>" } ]
+			    }
+			}
+		}
+	},
+    "response": {
+        "status": 200,
+        "body": "MATCHED-NESTED",
+        "headers": { "Content-Type": "text/text" }
+    }
+}

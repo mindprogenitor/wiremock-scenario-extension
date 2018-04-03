@@ -1,0 +1,21 @@
+{
+	"request": {
+		"customMatcher": {
+			"name": "concurrent-session",
+			"parameters": {
+			    "request": {
+			        "method": "POST",
+			        "urlPath": "/test",
+			        "bodyPatterns": [
+			    					 { "matchesXPath" : "/root/ns5:parent[count(child) = 2]",
+                                       "xPathNamespaces" : { "ns5" : "http://www.somewhere.io/XMLRequest"} } ]
+			    }
+			}
+		}
+	},
+    "response": {
+        "status": 200,
+        "body": "MATCHED-NAMESPACES",
+        "headers": { "Content-Type": "text/text" }
+    }
+}
