@@ -1,0 +1,20 @@
+{
+	"request": {
+		"customMatcher": {
+			"name": "concurrent-session",
+			"parameters": {
+			    "request": {
+			        "method": "POST",
+			        "urlPath": "/test",
+			        "bodyPatterns": [
+			    					 { "equalToXml": "<root xmlns:ns5=\"http://www.somewhere.io/XMLRequest\">\n<ns5:parent>\n<name>something</name>\n<child number=\"1\">John</child>\n<child number=\"2\">Mary</child>\n</ns5:parent>\n</root>" } ]
+			    }
+			}
+		}
+	},
+    "response": {
+        "status": 200,
+        "body": "MATCHED",
+        "headers": { "Content-Type": "text/text" }
+    }
+}

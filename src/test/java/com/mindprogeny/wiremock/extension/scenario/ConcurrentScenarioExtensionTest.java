@@ -578,4 +578,28 @@ public class ConcurrentScenarioExtensionTest {
 		   .when().post("/test")
 		   .then().body(equalTo("MATCHED-SIZE"));
     }
+    
+    @Test
+    public void testXmlBodyPattern() throws Exception {
+		loadStub("/stub/match-xml-body-pattern-stub.json");
+
+		given().port(55080)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().body("something")
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().body("<root></root>")
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().body("<root xmlns:ns5=\"http://www.somewhere.io/XMLRequest\"><ns5:parent><name>something</name><child number=\"1\">John</child><child number=\"2\">Mary</child></ns5:parent></root>")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED"));
+    }
 }
