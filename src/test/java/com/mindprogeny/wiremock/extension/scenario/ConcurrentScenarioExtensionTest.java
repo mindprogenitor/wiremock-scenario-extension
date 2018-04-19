@@ -9,8 +9,6 @@ package com.mindprogeny.wiremock.extension.scenario;
 
 import static com.jayway.restassured.RestAssured.given;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -638,4 +636,34 @@ public class ConcurrentScenarioExtensionTest {
 		   .when().post("/test")
 		   .then().body(equalTo("MATCHED-NESTED"));
      }
+     
+    @Test
+    public void testMultipartBodyPattern() throws Exception {
+		loadStub("/stub/match-multipart-body-pattern-stub.json");
+		
+		given().port(55080)
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().body("something")
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+
+		given().port(55080)
+		   .with().body("{ \"first\":1,\"second\":2}")
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+		
+		given().port(55080)
+		   .with().multiPart("first", "something")
+		   .when().post("/test")
+		   .then().body(equalTo("DEFAULT"));
+
+		given().port(55080)
+		   .with().multiPart("first","{ \"first\":1,\"second\":2}")
+		   .when().post("/test")
+		   .then().body(equalTo("MATCHED"));
+    }
+
 }

@@ -21,6 +21,7 @@ import com.github.tomakehurst.wiremock.matching.BinaryEqualToPattern;
 import com.github.tomakehurst.wiremock.matching.ContentPattern;
 import com.github.tomakehurst.wiremock.matching.MatchResult;
 import com.github.tomakehurst.wiremock.matching.MultiValuePattern;
+import com.github.tomakehurst.wiremock.matching.MultipartValuePattern;
 import com.github.tomakehurst.wiremock.matching.RequestMatcherExtension;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
 import com.github.tomakehurst.wiremock.matching.StringValuePattern;
@@ -61,7 +62,7 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
               , basicCredentials
               , getContentPatternList((Collection<Map<String,Object>>)requestParameters.get("bodyPatterns"))
               , null
-              , null).match(request);
+              , getMultipartPatternList((Collection<Map<String,Object>>)requestParameters.get("multipartPatterns"))).match(request);
         
 		return matchResult;
 	}
@@ -116,7 +117,7 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
 
 
     /**
-     * Transforms a list of pattern matching parameters (in the form of a map) to a list of StringValuePattern matching rules.
+     * Transforms a list of pattern matching parameters (in the form of a map) to a list of ContentPattern matching rules.
      * 
      * @param patternParameters list of pattern matching parameters
      * @return list of string value pattern rules
@@ -135,6 +136,26 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
         	} else {
                 result.add(StringValuePatternBuilder.build(e));
         	}
+        });
+        
+        return result;
+    }
+    
+    @SuppressWarnings("unchecked")
+	private List<MultipartValuePattern> getMultipartPatternList(Collection<Map<String,Object>> patternParameters) {
+        if (patternParameters == null || patternParameters.size() ==0) {
+            return null;
+        }
+        
+        List<MultipartValuePattern> result = new LinkedList<>();
+
+        patternParameters.forEach(e -> {
+        	result.add(
+        			new MultipartValuePattern(
+        					(String)e.get("name")
+        				  , MultipartValuePattern.MatchingType.valueOf((String)e.get("matchingType"))
+        				  , getMultiValuePatternMap((Map<String,Map<String,Object>>)e.get("headers"))
+        				  , getContentPatternList((Collection<Map<String,Object>>)e.get("bodyPatterns"))));
         });
         
         return result;
