@@ -53,7 +53,7 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>com.mindprogeny.util</groupId>
+			<groupId>com.mindprogeny.simple</groupId>
 			<artifactId>simple-http</artifactId>
 			<version>${simple-http.version}</version>
 			<scope>test</scope>

@@ -13,15 +13,14 @@ import static org.hamcrest.Matchers.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.mindprogeny.util.http.SimpleHttp;
-import com.mindprogeny.util.http.SimpleHttpResponse;
+import com.mindprogeny.simple.http.SimpleHttp;
+import com.mindprogeny.simple.http.SimpleHttpResponse;
 
 /**
  * @author Jo&atilde;o Viegas (joao.viegas@mindprogeny.com)
@@ -51,6 +50,7 @@ public class ConcurrentScenarioManagerTest {
 	@Before
 	public void loadScenarios() throws Exception {
 		wiremock.resetAll();
+		SimpleHttp.call("DELETE", "http://localhost:55080/__admin/concurrent-scenarios");
         for (int i=1; i < 7; i++) {
             loadStub("/stub/custom-step" + i + ".json");
             loadStub("/stub/custom-concurrent-step" + i + ".json");
@@ -129,7 +129,7 @@ public class ConcurrentScenarioManagerTest {
    	       .then().body(equalTo("2"));
 
         given().port(55080)
-    	   .when().get("/__admin/concurrent-scenarios")
+    	   .when().get("/__admin/concurrent-scenarios/TestConcurrency")
  	       .then().body("1", equalTo("THREE"));
 
         given().port(55080)
@@ -138,7 +138,7 @@ public class ConcurrentScenarioManagerTest {
    	       .then().body(equalTo("1"));
 
         given().port(55080)
-    	   .when().get("/__admin/concurrent-scenarios")
+    	   .when().get("/__admin/concurrent-scenarios/TestConcurrency")
  	       .then().body("1", equalTo("THREE"))
    	              .body("2", equalTo("TWO"));
 
@@ -148,7 +148,7 @@ public class ConcurrentScenarioManagerTest {
    	       .then().body(equalTo("1"));
 
         given().port(55080)
-    	   .when().get("/__admin/concurrent-scenarios")
+    	   .when().get("/__admin/concurrent-scenarios/TestConcurrency")
  	       .then().body("1", equalTo("THREE"))
    	              .body("2", equalTo("TWO"))
    	              .body("$ID", nullValue());

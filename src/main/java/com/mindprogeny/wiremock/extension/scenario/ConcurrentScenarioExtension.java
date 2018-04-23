@@ -289,4 +289,11 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
         return jsonMapper.writeValueAsString(SCENARIOS.get(scenario));
 	}
 
+	/**
+	 * Deletes all scenarios and their instances
+	 */
+	public static void clearAll() {
+		SCENARIOS.clear();
+	}
+
 }

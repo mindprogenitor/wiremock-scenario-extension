@@ -18,8 +18,8 @@ import org.junit.Test;
 
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.mindprogeny.util.http.SimpleHttp;
-import com.mindprogeny.util.http.SimpleHttpResponse;
+import com.mindprogeny.simple.http.SimpleHttp;
+import com.mindprogeny.simple.http.SimpleHttpResponse;
 import static org.hamcrest.Matchers.*;
 
 /**
