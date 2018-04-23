@@ -90,11 +90,9 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
         }
 
         String instanceIdentifier = (String)parameters.get("scenarioInstanceIdentifier");
-        String scenarioInstance = null;
-        if (instanceIdentifier != null) {
-            String instanceIdentifierPattern = (String)parameters.get("scenarioInstanceIdentifierPattern");
-            scenarioInstance = getScenarioInstance(instanceIdentifier, instanceIdentifierPattern, request);
-        } else {
+        String instanceIdentifierPattern = (String)parameters.get("scenarioInstanceIdentifierPattern");
+        String scenarioInstance = getScenarioInstance(instanceIdentifier, instanceIdentifierPattern, request);
+        if (scenarioInstance == null) {
         	scenarioInstance = DEFAULT_INSTANCE_ID;
         }
         
@@ -124,8 +122,14 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
      * @return the found instance id, or the default instance if no source was given.
      */
     private String getScenarioInstance(String instanceIdentifier, String instanceIdentifierPattern, Request request) {
+    	if (instanceIdentifier == null) {
+    		return null;
+    	}
         switch(instanceIdentifier) {
         case "url" :
+        	if (instanceIdentifierPattern == null) {
+        		break;
+        	}
             Pattern urlMatchPattern = Pattern.compile(instanceIdentifierPattern);
             Matcher matcher = urlMatchPattern.matcher(request.getUrl());
             if (matcher.matches()) {

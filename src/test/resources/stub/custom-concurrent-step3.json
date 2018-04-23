@@ -1,0 +1,23 @@
+{
+	"request": {
+		"customMatcher": {
+			"name": "concurrent-session",
+			"parameters": {
+			    "scenarioName": "Test Concurrency",
+			    "requiredScenarioState": "THREE",
+			    "newScenarioState": "FOUR",
+			    "scenarioInstanceIdentifier" : "cookie",
+			    "scenarioInstanceIdentifierPattern" : "SESSION",
+			    "request": {
+			        "method": "GET",
+			        "urlPath": "/testCustomConcurrent"
+			    }
+			}
+		}
+	},
+    "response": {
+        "status": 200,
+        "body": "3",
+        "headers": { "Content-Type": "text/plain" }
+    }
+}

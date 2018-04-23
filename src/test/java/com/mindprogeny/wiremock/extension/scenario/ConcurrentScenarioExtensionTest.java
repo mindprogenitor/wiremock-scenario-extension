@@ -676,6 +676,7 @@ public class ConcurrentScenarioExtensionTest {
         for (int i=1; i < 7; i++) {
             loadStub("/stub/step" + i + ".json");
             loadStub("/stub/custom-step" + i + ".json");
+            loadStub("/stub/custom-concurrent-step" + i + ".json");
         }
     }
     
@@ -696,6 +697,51 @@ public class ConcurrentScenarioExtensionTest {
         	given().port(55080)
         	   .when().get("/testCustom")
         	   .then().body(equalTo(Integer.toString(i)));
+        }
+    }
+
+    
+    @Test
+    public void testCustomConcurrentScenario() throws Exception {
+        loadScenarios();
+        for (int i = 1; i < 5; i++) {
+            given().port(55080)
+        	   .with().cookie("SESSION", "1")
+     	       .when().get("/testCustomConcurrent")
+     	       .then().body(equalTo(Integer.toString(i)));
+        }
+        
+        for (int i = 1; i < 2; i++) {
+            given().port(55080)
+     	       .with().cookie("SESSION", "2")
+  	           .when().get("/testCustomConcurrent")
+  	           .then().body(equalTo(Integer.toString(i)));
+        }
+        
+        for (int i = 1; i < 4; i++) {
+        	given().port(55080)
+  	           .when().get("/testCustomConcurrent")
+  	           .then().body(equalTo(Integer.toString(i)));
+        }
+        
+        for (int i = 5; i < 7; i++) {
+        	given().port(55080)
+  	           .with().cookie("SESSION", "1")
+	           .when().get("/testCustomConcurrent")
+	           .then().body(equalTo(Integer.toString(i)));
+        }
+        
+        for (int i = 4; i < 7; i++) {
+        	given().port(55080)
+	           .when().get("/testCustomConcurrent")
+	           .then().body(equalTo(Integer.toString(i)));
+        }
+        
+        for (int i = 2; i < 7; i++) {
+        	given().port(55080)
+	           .with().cookie("SESSION", "2")
+	           .when().get("/testCustomConcurrent")
+	           .then().body(equalTo(Integer.toString(i)));
         }
     }
 
