@@ -279,4 +279,14 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
         return jsonMapper.writeValueAsString(SCENARIOS);
 	}
 
+	/**
+	 * Returns all triggered instances of a particular scenario
+	 * 
+	 * @param scenario name
+	 * @return JsonProcessingException // shouldn't happen
+	 */
+	public static String serializeScenarioInstances(String scenario) throws JsonProcessingException {
+        return jsonMapper.writeValueAsString(SCENARIOS.get(scenario));
+	}
+
 }

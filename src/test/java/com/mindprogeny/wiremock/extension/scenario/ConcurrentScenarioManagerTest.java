@@ -107,4 +107,50 @@ public class ConcurrentScenarioManagerTest {
    	              .body("TestConcurrency.2", equalTo("TWO"))
    	              .body("TestCustom.$ID", equalTo("TWO"));
 	}
+	
+	@Test
+	public void testListActiveScenario() {
+        given().port(55080)
+    	   .when().get("/__admin/concurrent-scenarios")
+ 	       .then().body("scenarios", nullValue());
+        
+        given().port(55080)
+     	   .with().cookie("SESSION", "1")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("1"));
+
+        given().port(55080)
+    	   .when().get("/__admin/concurrent-scenarios/TestConcurrency")
+ 	       .then().body("1", equalTo("TWO"));
+
+        given().port(55080)
+     	   .with().cookie("SESSION", "1")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("2"));
+
+        given().port(55080)
+    	   .when().get("/__admin/concurrent-scenarios")
+ 	       .then().body("1", equalTo("THREE"));
+
+        given().port(55080)
+     	   .with().cookie("SESSION", "2")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("1"));
+
+        given().port(55080)
+    	   .when().get("/__admin/concurrent-scenarios")
+ 	       .then().body("1", equalTo("THREE"))
+   	              .body("2", equalTo("TWO"));
+
+        given().port(55080)
+     	   .with().cookie("SESSION", "2")
+   	       .when().get("/testCustom")
+   	       .then().body(equalTo("1"));
+
+        given().port(55080)
+    	   .when().get("/__admin/concurrent-scenarios")
+ 	       .then().body("1", equalTo("THREE"))
+   	              .body("2", equalTo("TWO"))
+   	              .body("$ID", nullValue());
+	}
 }
