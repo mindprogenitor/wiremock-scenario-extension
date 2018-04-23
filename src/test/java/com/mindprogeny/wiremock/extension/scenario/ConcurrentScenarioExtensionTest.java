@@ -9,9 +9,14 @@ package com.mindprogeny.wiremock.extension.scenario;
 
 import static com.jayway.restassured.RestAssured.given;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -664,6 +669,23 @@ public class ConcurrentScenarioExtensionTest {
 		   .with().multiPart("first","{ \"first\":1,\"second\":2}")
 		   .when().post("/test")
 		   .then().body(equalTo("MATCHED"));
+    }
+
+    
+    public void loadScenarios() throws Exception {
+        for (int i=1; i < 7; i++) {
+            loadStub("/stub/step" + i + ".json");
+        }
+    }
+    
+    @Test
+    public void testSingleScenario() throws Exception {
+        loadScenarios();
+        for (int i = 1; i < 7; i++) {
+        	given().port(55080)
+        	   .when().get("/test")
+        	   .then().body(equalTo(Integer.toString(i)));
+        }
     }
 
 }

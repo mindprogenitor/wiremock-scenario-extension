@@ -1,0 +1,14 @@
+{
+    "scenarioName": "Test Concurrency",
+    "requiredScenarioState": "SIX",
+    "newScenarioState": "Started",
+    "request": {
+        "method": "GET",
+        "urlPath": "/test"
+    },
+    "response": {
+        "status": 200,
+        "body": "6",
+        "headers": { "Content-Type": "text/plain" }
+    }
+}
