@@ -7,14 +7,21 @@
 
 package com.mindprogeny.wiremock.extension.scenario;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.github.tomakehurst.wiremock.client.BasicCredentials;
 import com.github.tomakehurst.wiremock.extension.Parameters;
+import com.github.tomakehurst.wiremock.http.Cookie;
+import com.github.tomakehurst.wiremock.http.QueryParameter;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.http.RequestMethod;
 import com.github.tomakehurst.wiremock.matching.BinaryEqualToPattern;
@@ -25,6 +32,9 @@ import com.github.tomakehurst.wiremock.matching.MultipartValuePattern;
 import com.github.tomakehurst.wiremock.matching.RequestMatcherExtension;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
 import com.github.tomakehurst.wiremock.matching.StringValuePattern;
+import com.github.tomakehurst.wiremock.stubbing.Scenario;
+
+import wiremock.org.custommonkey.xmlunit.exceptions.ConfigurationException;
 
 /**
  * @author Jo&atilde;o Viegas (joao.viegas@mindprogeny.com)
@@ -32,6 +42,16 @@ import com.github.tomakehurst.wiremock.matching.StringValuePattern;
  *
  */
 public class ConcurrentScenarioExtension extends RequestMatcherExtension {
+    
+    /**
+     * The Scenario repository
+     */
+    private static final ConcurrentHashMap<String,ConcurrentHashMap<String,AtomicReference<String>>> SCENARIOS = new ConcurrentHashMap<>();
+	
+    /**
+     * Default instance identifier for uni-thread scenarios
+     */
+    private static final String DEFAULT_INSTANCE_ID = "$ID";
 
 	/**
 	 * @see com.github.tomakehurst.wiremock.matching.RequestMatcherExtension#match(com.github.tomakehurst.wiremock.http.Request, com.github.tomakehurst.wiremock.extension.Parameters)
@@ -64,8 +84,71 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
               , null
               , getMultipartPatternList((Collection<Map<String,Object>>)requestParameters.get("multipartPatterns"))).match(request);
         
-		return matchResult;
+        String scenarioName = (String)parameters.get("scenarioName");
+        if (scenarioName == null || !matchResult.isExactMatch()) {
+            return matchResult;
+        }
+
+        String instanceIdentifier = (String)parameters.get("scenarioInstanceIdentifier");
+        String scenarioInstance = null;
+        if (instanceIdentifier != null) {
+            String instanceIdentifierPattern = (String)parameters.get("scenarioInstanceIdentifierPattern");
+            scenarioInstance = getScenarioInstance(instanceIdentifier, instanceIdentifierPattern, request);
+        } else {
+        	scenarioInstance = DEFAULT_INSTANCE_ID;
+        }
+        
+        AtomicReference<String> state = getOrInitialize(scenarioName, scenarioInstance);
+        
+        String requiredState = (String)parameters.get("requiredScenarioState");
+        if (requiredState != null && !requiredState.equals(state.get())) {
+            return MatchResult.noMatch();
+        }
+        String newState = (String)parameters.get("newScenarioState");
+        if (newState != null) {
+        	state.set(newState);
+        }
+        
+        
+        return MatchResult.exactMatch();
 	}
+
+	/**
+     * Gets the instance id from the request, based on the configured source of an instance if and the pattern to search for.
+     * <p>
+     * if the source is a query parameter or a cookie, the pattern is expected to be the exact match of the parameter or cookie name.
+     *  
+     * @param instanceIdentifier source the instance id should be looked for
+     * @param instanceIdentifierPattern the pattern to search for
+     * @param request the request to search in
+     * @return the found instance id, or the default instance if no source was given.
+     */
+    private String getScenarioInstance(String instanceIdentifier, String instanceIdentifierPattern, Request request) {
+        switch(instanceIdentifier) {
+        case "url" :
+            Pattern urlMatchPattern = Pattern.compile(instanceIdentifierPattern);
+            Matcher matcher = urlMatchPattern.matcher(request.getUrl());
+            if (matcher.matches()) {
+                return matcher.group(1);
+            }
+            break;
+        case "queryParameter" : 
+            QueryParameter parameter = request.queryParameter(instanceIdentifierPattern);
+            if (parameter != null) {
+                return parameter.firstValue();
+            }
+            break;
+        case "cookie" :
+            Cookie cookie = request.getCookies().get(instanceIdentifierPattern);
+            if (cookie != null) {
+                return cookie.getValue();
+            }
+            break;
+        default :
+            throw new ConfigurationException("Unknown instance identifier source : " + instanceIdentifier);
+        }
+        return null;
+    }
 
 	/**
      * @see com.github.tomakehurst.wiremock.matching.RequestMatcherExtension#getName()
@@ -160,4 +243,20 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
         
         return result;
     }
+    
+    
+    /**
+     * Gets the scenario state of a specific instance.  If the scenario and/or instance are still not present in the repository
+     * (no scenario stubs have been accessed yet, since the last reset) the instance scenario is initialized.
+     * 
+     * @param scenarioName Name of the scenario
+     * @param scenarioInstance The instance id
+     * @return The instance Scenario State
+     */
+    public static AtomicReference<String> getOrInitialize(String scenarioName, String scenarioInstance) {
+        ConcurrentHashMap<String,AtomicReference<String>> instances = SCENARIOS.computeIfAbsent(scenarioName, k -> new ConcurrentHashMap<>());
+        AtomicReference<String> state = instances.computeIfAbsent(scenarioInstance,k -> new AtomicReference<>(Scenario.STARTED));
+        return state;
+    }
+
 }
