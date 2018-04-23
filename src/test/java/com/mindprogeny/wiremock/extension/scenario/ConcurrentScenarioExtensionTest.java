@@ -675,6 +675,7 @@ public class ConcurrentScenarioExtensionTest {
     public void loadScenarios() throws Exception {
         for (int i=1; i < 7; i++) {
             loadStub("/stub/step" + i + ".json");
+            loadStub("/stub/custom-step" + i + ".json");
         }
     }
     
@@ -684,6 +685,16 @@ public class ConcurrentScenarioExtensionTest {
         for (int i = 1; i < 7; i++) {
         	given().port(55080)
         	   .when().get("/test")
+        	   .then().body(equalTo(Integer.toString(i)));
+        }
+    }
+    
+    @Test
+    public void testCustomSingleScenario() throws Exception {
+        loadScenarios();
+        for (int i = 1; i < 7; i++) {
+        	given().port(55080)
+        	   .when().get("/testCustom")
         	   .then().body(equalTo(Integer.toString(i)));
         }
     }
