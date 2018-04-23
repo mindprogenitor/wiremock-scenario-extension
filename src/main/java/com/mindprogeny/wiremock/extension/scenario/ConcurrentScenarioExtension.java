@@ -7,7 +7,6 @@
 
 package com.mindprogeny.wiremock.extension.scenario;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -34,6 +33,8 @@ import com.github.tomakehurst.wiremock.matching.RequestPattern;
 import com.github.tomakehurst.wiremock.matching.StringValuePattern;
 import com.github.tomakehurst.wiremock.stubbing.Scenario;
 
+import wiremock.com.fasterxml.jackson.core.JsonProcessingException;
+import wiremock.com.fasterxml.jackson.databind.ObjectMapper;
 import wiremock.org.custommonkey.xmlunit.exceptions.ConfigurationException;
 
 /**
@@ -52,6 +53,11 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
      * Default instance identifier for uni-thread scenarios
      */
     private static final String DEFAULT_INSTANCE_ID = "$ID";
+
+    /**
+     * Object Mapper to serialize maps
+     */
+    private static final ObjectMapper jsonMapper = new ObjectMapper();
 
 	/**
 	 * @see com.github.tomakehurst.wiremock.matching.RequestMatcherExtension#match(com.github.tomakehurst.wiremock.http.Request, com.github.tomakehurst.wiremock.extension.Parameters)
@@ -262,5 +268,15 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
         AtomicReference<String> state = instances.computeIfAbsent(scenarioInstance,k -> new AtomicReference<>(Scenario.STARTED));
         return state;
     }
+
+	/**
+	 * Returns all triggered scenarios and currently held in memory, as a json object.
+	 * 
+	 * @return A string representing the json object with all inmemory scenario instances and states
+	 * @throws JsonProcessingException // shouldn't happen
+	 */
+	public static String serializeScenarios() throws JsonProcessingException {
+        return jsonMapper.writeValueAsString(SCENARIOS);
+	}
 
 }

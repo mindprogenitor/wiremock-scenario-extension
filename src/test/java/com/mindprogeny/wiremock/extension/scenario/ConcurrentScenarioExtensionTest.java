@@ -9,14 +9,9 @@ package com.mindprogeny.wiremock.extension.scenario;
 
 import static com.jayway.restassured.RestAssured.given;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

@@ -3,7 +3,7 @@
 		"customMatcher": {
 			"name": "concurrent-session",
 			"parameters": {
-			    "scenarioName": "Test Concurrency",
+			    "scenarioName": "TestConcurrency",
 			    "requiredScenarioState": "Started",
 			    "newScenarioState": "TWO",
 			    "scenarioInstanceIdentifier" : "cookie",
