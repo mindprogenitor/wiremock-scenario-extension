@@ -154,7 +154,6 @@ public class ConcurrentScenarioManagerTest {
    	              .body("$ID", nullValue());
 	}
 
-	
 	@Test
 	public void testDeleteScenarios() {
         given().port(55080)
@@ -195,7 +194,61 @@ public class ConcurrentScenarioManagerTest {
         given().port(55080)
 	       .when().get("/testCustom")
 	       .then().body(equalTo("1"));
+	}
 
+	@Test
+	public void testDeleteScenarioInstances() {
+        given().port(55080)
+    	   .when().get("/__admin/concurrent-scenarios")
+ 	       .then().body("scenarios", nullValue());
+        
+        given().port(55080)
+     	   .with().cookie("SESSION", "1")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("1"));
+        
+        given().port(55080)
+  	       .with().cookie("SESSION", "1")
+	       .when().get("/testCustomConcurrent")
+	       .then().body(equalTo("2"));
+        
+        given().port(55080)
+     	   .with().cookie("SESSION", "2")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("1"));
+        
+        given().port(55080)
+     	   .with().cookie("SESSION", "2")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("2"));
+
+        given().port(55080)
+    	   .when().delete("/__admin/concurrent-scenarios/TestConcurrency/1")
+ 	       .then().statusCode(200);
+
+        given().port(55080)
+     	   .with().cookie("SESSION", "1")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("1"));
+        
+        given().port(55080)
+     	   .with().cookie("SESSION", "2")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("3"));
+
+        given().port(55080)
+    	   .when().delete("/__admin/concurrent-scenarios/TestConcurrency/2")
+ 	       .then().statusCode(200);
+
+        given().port(55080)
+     	   .with().cookie("SESSION", "1")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("2"));
+        
+        given().port(55080)
+     	   .with().cookie("SESSION", "2")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("1"));
 	}
 
 }
