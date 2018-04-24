@@ -1,5 +1,5 @@
 /*
- * ClearScenarios.java, 23 Apr 2018
+ * DeleteScenario.java, 24 Apr 2018
  * Created by Joao Viegas (joao.viegas@mindprogeny.com)
  *
  * Copyright (c) 2018 Mind Progeny.
@@ -17,15 +17,15 @@ import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 import com.mindprogeny.wiremock.extension.scenario.ConcurrentScenarioExtension;
 
 /**
- * Admin task to clear all scenarios.
+ * Admin task to remove a scenario and all its instances from the repository.
  * <p>
- * This is a good operation to execute alongside a stub reset.
+ * This operation can also effectively be used as a scenario reset.
  * 
  * @author Jo&atilde;o Viegas (joao.viegas@mindprogeny.com)
- * @since 23 Apr 2018
+ * @since 24 Apr 2018
  *
  */
-public class ClearScenarios implements AdminTask {
+public class DeleteScenario implements AdminTask {
 
     /**
      * @see com.github.tomakehurst.wiremock.admin.AdminTask#execute(com.github.tomakehurst.wiremock.core.Admin, com.github.tomakehurst.wiremock.http.Request, com.github.tomakehurst.wiremock.admin.model.PathParams)
@@ -33,7 +33,11 @@ public class ClearScenarios implements AdminTask {
     @Override
     public ResponseDefinition execute(Admin admin, Request request, PathParams pathParams) {
         
-        ConcurrentScenarioExtension.clearAll();
+        if (!ConcurrentScenarioExtension.clearScenario(pathParams.get("scenario"))) {
+            return ResponseDefinitionBuilder.responseDefinition()
+                                            .withStatus(HttpURLConnection.HTTP_NOT_FOUND)
+                                            .build();
+        }
         
         return ResponseDefinitionBuilder.responseDefinition()
                                         .withStatus(HttpURLConnection.HTTP_OK)

@@ -296,4 +296,14 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
 		SCENARIOS.clear();
 	}
 
+	/**
+	 * Deletes a specific scenario and all its instances
+	 * 
+	 * @param scenario the name of the scenario to delete
+	 * @return true if a scenario was deleted or false if no scenario with the provided name existed.
+	 */
+	public static boolean clearScenario(String scenario) {
+		return SCENARIOS.remove(scenario) != null;
+	}
+
 }
