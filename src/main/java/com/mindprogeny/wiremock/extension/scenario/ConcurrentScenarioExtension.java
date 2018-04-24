@@ -306,4 +306,19 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
 		return SCENARIOS.remove(scenario) != null;
 	}
 
+	/**
+	 * Deletes a specific scenario instance
+	 * 
+	 * @param scenario the name of the scenario to delete
+	 * @param instance the instance id
+	 * @return true if a scenario instance was deleted or false if no scenario instance with the provided id for the requested scenario existed.
+	 */
+	public static boolean clearInstance(String scenario, String instance) {
+		ConcurrentHashMap<String, AtomicReference<String>> scenarioInstances = SCENARIOS.get(scenario);
+		if (scenarioInstances != null) {
+			return scenarioInstances.remove(instance) != null;
+		}
+		return false;
+	}
+
 }

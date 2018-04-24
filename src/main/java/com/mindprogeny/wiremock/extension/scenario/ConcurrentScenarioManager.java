@@ -11,6 +11,7 @@ import com.github.tomakehurst.wiremock.extension.AdminApiExtension;
 import com.github.tomakehurst.wiremock.http.RequestMethod;
 import com.mindprogeny.wiremock.extension.scenario.admin.task.ClearScenarios;
 import com.mindprogeny.wiremock.extension.scenario.admin.task.DeleteScenario;
+import com.mindprogeny.wiremock.extension.scenario.admin.task.DeleteScenarioInstance;
 import com.mindprogeny.wiremock.extension.scenario.admin.task.GetScenario;
 import com.mindprogeny.wiremock.extension.scenario.admin.task.ListActiveScenarios;
 
@@ -41,6 +42,7 @@ public class ConcurrentScenarioManager implements AdminApiExtension {
         router.add(RequestMethod.GET, "/concurrent-scenarios/{scenario}", GetScenario.class);
         router.add(RequestMethod.DELETE, "/concurrent-scenarios", ClearScenarios.class);
         router.add(RequestMethod.DELETE, "/concurrent-scenarios/{scenario}", DeleteScenario.class);
+        router.add(RequestMethod.DELETE, "/concurrent-scenarios/{scenario}/{instance}", DeleteScenarioInstance.class);
 
     }
 
