@@ -329,7 +329,7 @@ public class ConcurrentScenarioManagerTest {
    	       .then().body(equalTo("1"));
         
         given().port(55080)
-     	   .with().cookie("SESSION", "1")
+     	   .with().cookie("SESSION", "2")
    	       .when().get("/testCustomConcurrent")
    	       .then().body(equalTo("2"));
 

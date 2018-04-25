@@ -321,4 +321,16 @@ public class ConcurrentScenarioExtension extends RequestMatcherExtension {
 		return false;
 	}
 
+	/**
+	 * Sets the state of a specific instance of a scenario. If the scenario doesn't exist or the specific instance
+	 * doesn't exist, they will be created (even if no stub is using it).
+	 * 
+	 * @param scenario the scenario name
+	 * @param instance the instance id
+	 * @param state the state to set the scenario instance to.
+	 */
+	public static void setScenarioState(String scenario, String instance, String state) {
+		getOrInitialize(scenario, instance).set(state);
+	}
+
 }
