@@ -305,7 +305,6 @@ public class ConcurrentScenarioManagerTest {
    	       .when().get("/testCustomConcurrent")
    	       .then().body(equalTo("1"));
 	}
-	
 
 	@Test
 	public void testSetScenarioState() throws IOException, URISyntaxException {
@@ -347,6 +346,46 @@ public class ConcurrentScenarioManagerTest {
    	       .when().get("/testCustomConcurrent")
    	       .then().body(equalTo("3"));
 	}
-	
 
+	@Test
+	public void testSetScenarioStateWithBody() throws IOException, URISyntaxException {
+        given().port(55080)
+    	   .when().get("/__admin/concurrent-scenarios")
+ 	       .then().body(equalTo("{}"));
+        
+        given().port(55080)
+     	   .with().cookie("SESSION", "1")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("1"));
+        
+        given().port(55080)
+     	   .with().cookie("SESSION", "1")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("2"));
+        
+        given().port(55080)
+     	   .with().cookie("SESSION", "2")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("1"));
+        
+        given().port(55080)
+     	   .with().cookie("SESSION", "2")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("2"));
+
+        given().port(55080)
+           .with().body(Files.readAllBytes(Paths.get(getClass().getResource("/command/set.json").toURI())))
+    	   .when().put("/__admin/concurrent-scenarios")
+ 	       .then().statusCode(200);
+        
+        given().port(55080)
+     	   .with().cookie("SESSION", "1")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("1"));
+        
+        given().port(55080)
+     	   .with().cookie("SESSION", "2")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("3"));
+	}
 }
