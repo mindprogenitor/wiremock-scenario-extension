@@ -21,7 +21,6 @@ import org.junit.Test;
 
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.jayway.restassured.response.Response;
 import com.mindprogeny.simpel.http.SimpelHttp;
 import com.mindprogeny.simpel.http.SimpelHttpResponse;
 
@@ -306,5 +305,48 @@ public class ConcurrentScenarioManagerTest {
    	       .when().get("/testCustomConcurrent")
    	       .then().body(equalTo("1"));
 	}
+	
+
+	@Test
+	public void testSetScenarioState() throws IOException, URISyntaxException {
+        given().port(55080)
+    	   .when().get("/__admin/concurrent-scenarios")
+ 	       .then().body(equalTo("{}"));
+        
+        given().port(55080)
+     	   .with().cookie("SESSION", "1")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("1"));
+        
+        given().port(55080)
+     	   .with().cookie("SESSION", "1")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("2"));
+        
+        given().port(55080)
+     	   .with().cookie("SESSION", "2")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("1"));
+        
+        given().port(55080)
+     	   .with().cookie("SESSION", "1")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("2"));
+
+        given().port(55080)
+    	   .when().put("/__admin/concurrent-scenarios/TestConcurrency/1/Started")
+ 	       .then().statusCode(200);
+        
+        given().port(55080)
+     	   .with().cookie("SESSION", "1")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("1"));
+        
+        given().port(55080)
+     	   .with().cookie("SESSION", "2")
+   	       .when().get("/testCustomConcurrent")
+   	       .then().body(equalTo("3"));
+	}
+	
 
 }
