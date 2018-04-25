@@ -40,7 +40,7 @@ public class ConcurrentScenarioManager implements AdminApiExtension {
         
         router.add(RequestMethod.GET, "/concurrent-scenarios", ListActiveScenarios.class);
         router.add(RequestMethod.GET, "/concurrent-scenarios/{scenario}", GetScenario.class);
-        router.add(RequestMethod.DELETE, "/concurrent-scenarios", ClearScenarios.class);
+        router.add(RequestMethod.DELETE, "/concurrent-scenarios/all", ClearScenarios.class);
         router.add(RequestMethod.DELETE, "/concurrent-scenarios/{scenario}", DeleteScenario.class);
         router.add(RequestMethod.DELETE, "/concurrent-scenarios/{scenario}/{instance}", DeleteScenarioInstance.class);
 

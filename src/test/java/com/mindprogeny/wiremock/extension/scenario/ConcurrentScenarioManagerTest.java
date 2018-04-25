@@ -50,7 +50,7 @@ public class ConcurrentScenarioManagerTest {
 	@Before
 	public void loadScenarios() throws Exception {
 		wiremock.resetAll();
-		SimpelHttp.call("DELETE", "http://localhost:55080/__admin/concurrent-scenarios");
+		SimpelHttp.call("DELETE", "http://localhost:55080/__admin/concurrent-scenarios/all");
         for (int i=1; i < 7; i++) {
             loadStub("/stub/custom-step" + i + ".json");
             loadStub("/stub/custom-concurrent-step" + i + ".json");
