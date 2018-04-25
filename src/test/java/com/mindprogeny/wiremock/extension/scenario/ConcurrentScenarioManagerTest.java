@@ -19,8 +19,8 @@ import org.junit.Test;
 
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.mindprogeny.simple.http.SimpleHttp;
-import com.mindprogeny.simple.http.SimpleHttpResponse;
+import com.mindprogeny.simpel.http.SimpelHttp;
+import com.mindprogeny.simpel.http.SimpelHttpResponse;
 
 /**
  * @author Jo&atilde;o Viegas (joao.viegas@mindprogeny.com)
@@ -40,7 +40,7 @@ public class ConcurrentScenarioManagerTest {
 					                        , new ConcurrentScenarioManager()));
 
 	private void loadStub(String stub) throws Exception {
-		SimpleHttpResponse response = SimpleHttp.call("POST", "http://localhost:55080/__admin/mappings/new",
+		SimpelHttpResponse response = SimpelHttp.call("POST", "http://localhost:55080/__admin/mappings/new",
 				Files.readAllBytes(Paths.get(getClass().getResource(stub).toURI())));
 		if (response.getResponseCode() != 201) {
 			throw new RuntimeException("Failed to load stub " + stub);
@@ -50,7 +50,7 @@ public class ConcurrentScenarioManagerTest {
 	@Before
 	public void loadScenarios() throws Exception {
 		wiremock.resetAll();
-		SimpleHttp.call("DELETE", "http://localhost:55080/__admin/concurrent-scenarios");
+		SimpelHttp.call("DELETE", "http://localhost:55080/__admin/concurrent-scenarios");
         for (int i=1; i < 7; i++) {
             loadStub("/stub/custom-step" + i + ".json");
             loadStub("/stub/custom-concurrent-step" + i + ".json");

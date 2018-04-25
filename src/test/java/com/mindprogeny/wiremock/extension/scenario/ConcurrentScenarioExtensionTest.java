@@ -18,8 +18,8 @@ import org.junit.Test;
 
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.mindprogeny.simple.http.SimpleHttp;
-import com.mindprogeny.simple.http.SimpleHttpResponse;
+import com.mindprogeny.simpel.http.SimpelHttp;
+import com.mindprogeny.simpel.http.SimpelHttpResponse;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -43,7 +43,7 @@ public class ConcurrentScenarioExtensionTest {
 	}
 
 	private void loadStub(String stub) throws Exception {
-		SimpleHttpResponse response = SimpleHttp.call("POST", "http://localhost:55080/__admin/mappings/new",
+		SimpelHttpResponse response = SimpelHttp.call("POST", "http://localhost:55080/__admin/mappings/new",
 				Files.readAllBytes(Paths.get(getClass().getResource(stub).toURI())));
 		if (response.getResponseCode() != 201) {
 			throw new RuntimeException("Failed to load stub " + stub);
