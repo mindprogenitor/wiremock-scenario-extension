@@ -11,7 +11,8 @@
 		<version>0.0.2</version>
 	</parent>
 
-	<description>Wiremock Extension to use dynamic stubs using freemarker templates</description>
+	<name>${project.groupId}:${project.artifactId}</name>
+	<description>Wiremock Extension to support concurrent scenarios</description>
 	<url>https://github.com/mindprogenitor/wiremock-scenario-extension</url>
 
 	<scm>
