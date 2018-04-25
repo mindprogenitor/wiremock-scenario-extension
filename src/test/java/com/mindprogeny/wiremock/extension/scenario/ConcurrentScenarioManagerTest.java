@@ -294,12 +294,12 @@ public class ConcurrentScenarioManagerTest {
     	   .when().delete("/__admin/concurrent-scenarios")
  	       .then().statusCode(200)
  	              .body("TestConcurrency.1", equalTo(true))
- 	              .body("TestConcurrency.2", equalTo("false"));
+ 	              .body("TestConcurrency.2", equalTo(false));
 
         given().port(55080)
      	   .with().cookie("SESSION", "1")
    	       .when().get("/testCustomConcurrent")
-   	       .then().body(equalTo("2"));
+   	       .then().body(equalTo("1"));
         
         given().port(55080)
      	   .with().cookie("SESSION", "2")
