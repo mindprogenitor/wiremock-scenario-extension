@@ -3,7 +3,7 @@
 
 	<groupId>com.mindprogeny.wiremock.extension</groupId>
 	<artifactId>wiremock-scenario-extension</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	
 	<parent>
 		<groupId>com.mindprogeny.common</groupId>
@@ -18,7 +18,7 @@
 		<connection>scm:git:git@github.com:mindprogenitor/wiremock-scenario-extension.git</connection>
 		<developerConnection>scm:git:git@github.com:mindprogenitor/wiremock-scenario-extension.git</developerConnection>
 		<url>http://github.com/mindprogenitor/wiremock-scenario-extension</url>
-		<tag>HEAD</tag>
+		<tag>0.0.1</tag>
 	</scm>
 
 	<properties>
