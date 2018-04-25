@@ -60,12 +60,6 @@
 			<version>${jayway.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.jayway.restassured</groupId>
-			<artifactId>json-path</artifactId>
-			<version>${jayway.version}</version>
-			<scope>test</scope>
-		</dependency>
 
 	</dependencies>
 
