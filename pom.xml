@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>com.mindprogeny.common</groupId>
 		<artifactId>common-oss</artifactId>
-		<version>0.0.1</version>
+		<version>0.0.2</version>
 	</parent>
 
 	<description>Wiremock Extension to use dynamic stubs using freemarker templates</description>
