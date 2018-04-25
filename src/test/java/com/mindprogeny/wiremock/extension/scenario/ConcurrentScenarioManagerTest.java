@@ -64,7 +64,7 @@ public class ConcurrentScenarioManagerTest {
 	public void testListActiveScenarios() {
         given().port(55080)
     	   .when().get("/__admin/concurrent-scenarios")
- 	       .then().body("scenarios", nullValue());
+ 	       .then().body(equalTo("{}"));
         
         given().port(55080)
      	   .with().cookie("SESSION", "1")
@@ -115,7 +115,7 @@ public class ConcurrentScenarioManagerTest {
 	public void testListActiveScenario() {
         given().port(55080)
     	   .when().get("/__admin/concurrent-scenarios")
- 	       .then().body("scenarios", nullValue());
+ 	       .then().body(equalTo("{}"));
         
         given().port(55080)
      	   .with().cookie("SESSION", "1")
@@ -161,7 +161,7 @@ public class ConcurrentScenarioManagerTest {
 	public void testDeleteScenarios() {
         given().port(55080)
     	   .when().get("/__admin/concurrent-scenarios")
- 	       .then().body("scenarios", nullValue());
+ 	       .then().body(equalTo("{}"));
         
         given().port(55080)
      	   .with().cookie("SESSION", "1")
@@ -203,7 +203,7 @@ public class ConcurrentScenarioManagerTest {
 	public void testDeleteScenarioInstances() {
         given().port(55080)
     	   .when().get("/__admin/concurrent-scenarios")
- 	       .then().body("scenarios", nullValue());
+ 	       .then().body(equalTo("{}"));
         
         given().port(55080)
      	   .with().cookie("SESSION", "1")
