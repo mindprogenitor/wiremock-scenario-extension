@@ -16,6 +16,7 @@ import com.mindprogeny.wiremock.extension.scenario.admin.task.DeleteScenariosWit
 import com.mindprogeny.wiremock.extension.scenario.admin.task.GetScenario;
 import com.mindprogeny.wiremock.extension.scenario.admin.task.ListActiveScenarios;
 import com.mindprogeny.wiremock.extension.scenario.admin.task.SetScenarioSessionState;
+import com.mindprogeny.wiremock.extension.scenario.admin.task.SetScenarioSessionStateWithBody;
 
 /**
  * Admin Extension providing api endpoints to manage the scenario repository.
@@ -47,6 +48,7 @@ public class ConcurrentScenarioManager implements AdminApiExtension {
         router.add(RequestMethod.DELETE, "/concurrent-scenarios/{scenario}", DeleteScenario.class);
         router.add(RequestMethod.DELETE, "/concurrent-scenarios/{scenario}/{instance}", DeleteScenarioInstance.class);
         router.add(RequestMethod.PUT, "/concurrent-scenarios/{scenario}/{instance}/{state}", SetScenarioSessionState.class);
+        router.add(RequestMethod.PUT, "/concurrent-scenarios", SetScenarioSessionStateWithBody.class);
 
     }
 
